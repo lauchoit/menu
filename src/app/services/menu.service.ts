@@ -1,28 +1,29 @@
 import { Injectable } from '@angular/core';
+import { element } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuService {
 
-  private nouser = [
+  private tres = [
     {
-      name: 'No registrado',
+      name: 'que Bonito',
       icon: 'expand_more',
       subItem:
        [],
     },
     {
-      name: 'Rendiciones',
+      name: 'Segundo',
       icon: 'expand_more',
       subItem:
        [
          {
-          name : 'Resumen de Giros',
+          name : 'subMenu2.1',
           url : '/rendiciones/resumen-de-giros'
          },
          {
-          name : 'Rendiciones por Aprobación',
+          name : 'subMenu2.2',
           url : '/rendiciones/rendiciones-por-aprobacion'
         },
        ],
@@ -84,19 +85,54 @@ export class MenuService {
   ];
 
 
-  constructor() { }
+  constructor() {}
+
 
 
 menubar(tipo: string) {
   console.log(tipo);
 }
 
-seleccionMenu(tipo: string){
+removeDuplicates(arrayIn) {
+  const arrayOut = [];
+  arrayIn.forEach(item=> {
+    try {
+      if (JSON.stringify(arrayOut[arrayOut.length-1].name) !== JSON.stringify(item.name)) {
+        arrayOut.push(item);
+      }
+    } catch(err) {
+      arrayOut.push(item);
+     }
+  })
+  return arrayOut;
+}
+
+seleccionMenu(roles: string[]) {
+
+  const menuGlobal: any[] = [];
+  let menu: any[] = [];
+  for (const key in roles) {
+    if (roles.hasOwnProperty(key)) {
+      const rol = roles[key];
+      for (const option of this.generateMenu(rol)) {
+        menuGlobal.push(option);
+      }
+    }
+  }
+  menu = this.removeDuplicates(menuGlobal);
+
+  return menu;
+
+}
+
+generateMenu (tipo) {
   let menu = null;
-  if ( tipo === 'administrador' ){
+  if ( tipo === 'administrador' ) {
      menu = this.menuadministrador;
   } else if (tipo === 'otro') {
      menu = this.menuotro;
+  } else if (tipo === 'tres') {
+    menu = this.tres;
   } else {
     menu = false;
   }

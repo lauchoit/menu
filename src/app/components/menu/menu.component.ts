@@ -15,8 +15,7 @@ export class MenuComponent implements OnInit {
   constructor( private menuService: MenuService ) { }
 
   ngOnInit() {
-    this.menu = this.menuService.seleccionMenu('otro');
-    console.log(this.menu);
+    this.menu = this.menuService.seleccionMenu(['administrador', 'tres']);
   }
 
 
